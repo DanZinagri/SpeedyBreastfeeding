@@ -1,0 +1,4 @@
+E:\SteamLibrary\steamapps\common\RimWorld\Mods\SpeedyBreastfeeding\1.6\Assemblies\SpeedyBreastfeeding.dll
+E:\SteamLibrary\steamapps\common\RimWorld\Mods\SpeedyBreastfeeding\Source\SpeedyBreastfeeding\obj\Debug\SpeedyBreastfeeding.csproj.AssemblyReference.cache
+E:\SteamLibrary\steamapps\common\RimWorld\Mods\SpeedyBreastfeeding\Source\SpeedyBreastfeeding\obj\Debug\SpeedyBreastfeeding.csproj.CoreCompileInputs.cache
+E:\SteamLibrary\steamapps\common\RimWorld\Mods\SpeedyBreastfeeding\Source\SpeedyBreastfeeding\obj\Debug\SpeedyBreastfeeding.dll
