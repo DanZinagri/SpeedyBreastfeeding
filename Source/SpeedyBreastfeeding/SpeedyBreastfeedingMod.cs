@@ -36,6 +36,9 @@ public class SpeedyBreastfeedingMod : Mod
         listing.Label("SpeedyBreastfeeding.Scale".Translate() + ": " + Settings.BreastfeedMultiplier);
         //we're setting the minimum to anything but 0.
         Settings.BreastfeedMultiplier = (int) listing.Slider(Settings.BreastfeedMultiplier, 1f, 10f);
+        listing.GapLine();
+        listing.Label("SpeedyBreastfeeding.Scale2".Translate() + ": " + Settings.BabyfoodMultiplier);
+        Settings.BabyfoodMultiplier = (int)listing.Slider(Settings.BabyfoodMultiplier, 1f, 10f);
         listing.End();
     }
 }
@@ -43,10 +46,12 @@ public class SpeedyBreastfeedingMod : Mod
 public class SpeedyBreastfeedingSettings : ModSettings
 {
     public int BreastfeedMultiplier = 2;
+    public int BabyfoodMultiplier = 2;
 
     public override void ExposeData()
     {
         base.ExposeData();
         Scribe_Values.Look(ref BreastfeedMultiplier, "BreastfeedMultiplier", 2);
+        Scribe_Values.Look(ref BabyfoodMultiplier, "BabyfoodMultiplier", 2);
     }
 }
