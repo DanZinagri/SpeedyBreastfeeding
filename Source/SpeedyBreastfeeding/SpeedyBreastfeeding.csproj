@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Patch_FeedBabyFoodFromInventory.cs" />
+    <Compile Include="Patch_LactationExpansionCompat.cs" />
     <Compile Include="Patch_SuckleFromLactatingPawn.cs" />
     <Compile Include="SpeedyBreastfeedingMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
