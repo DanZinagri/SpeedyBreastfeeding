@@ -3,4 +3,6 @@
     <SpeedyBreastfeedingTitle>Speedy Breastfeeding</SpeedyBreastfeedingTitle>
     <SpeedyBreastfeeding.Scale>Breastfeeding Multiplier Scale</SpeedyBreastfeeding.Scale>
     <SpeedyBreastfeeding.Scale2>Baby Food Multiplier Scale</SpeedyBreastfeeding.Scale2>
+    <SpeedyBreastfeeding.DebugLogging>Debug logging</SpeedyBreastfeeding.DebugLogging>
+    <SpeedyBreastfeeding.DebugLoggingDesc>Log which methods were patched on startup. Takes effect after a restart.</SpeedyBreastfeeding.DebugLoggingDesc>
 </LanguageData>

@@ -25,7 +25,7 @@ namespace SpeedyBreastfeeding
 
             new Harmony("DanZinagri.SpeedyBreastfeeding").Patch(suckle,
                 transpiler: new HarmonyMethod(typeof(Patch_SuckleFromLactatingPawn), nameof(Patch_SuckleFromLactatingPawn.Transpiler)));
-            Log.Message("[SpeedyBreastfeeding] Lactation Expansion detected; applied breastfeed speed to LactationUtilities.Suckle.");
+            SpeedyBreastfeedingMod.DebugLog("Lactation Expansion detected; applied breastfeed speed to LactationUtilities.Suckle.");
         }
     }
 }

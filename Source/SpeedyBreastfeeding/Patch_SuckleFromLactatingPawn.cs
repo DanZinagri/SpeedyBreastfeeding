@@ -2,7 +2,6 @@
 using RimWorld;
 using System.Collections.Generic;
 using System.Reflection.Emit;
-using System.Runtime;
 using Verse;
 
 namespace SpeedyBreastfeeding
@@ -14,9 +13,11 @@ namespace SpeedyBreastfeeding
         {
             foreach (CodeInstruction instruction in instructions)
             {
-                if (instruction.opcode == OpCodes.Ldc_R4 && instruction.operand is float value && value == 5000f)
+                if (SpeedyBreastfeedingMod.IsFeedTicksConstant(instruction))
                 {
-                    instruction.operand = 5000f / SpeedyBreastfeedingMod.Settings.BreastfeedMultiplier; // 2x faster feeding
+                    // Swap the constant for a call so slider changes apply without a restart.
+                    instruction.opcode = OpCodes.Call;
+                    instruction.operand = AccessTools.Method(typeof(SpeedyBreastfeedingMod), nameof(SpeedyBreastfeedingMod.BreastfeedTicks));
                 }
 
                 yield return instruction;

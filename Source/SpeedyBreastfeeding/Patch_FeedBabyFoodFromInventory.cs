@@ -2,47 +2,54 @@
 using RimWorld;
 using SpeedyBreastfeeding;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Verse;
 
+// The bottle-feed rate lives in a compiler-generated lambda (FeedingToil.tickIntervalAction) inside
+// JobDriver_BottleFeedBaby.FeedBabyFoodFromInventory, so it can't be targeted by name. We scan that method's
+// lambdas and patch only the one whose IL actually contains the 5000f constant.
 [HarmonyPatch]
 public static class Patch_FeedBabyFoodFromInventory
 {
-    static IEnumerable<MethodBase> TargetMethods()
+    private static List<MethodBase> targets;
+
+    static bool Prepare()
     {
-        foreach (var method in AccessTools.GetDeclaredMethods(typeof(JobDriver_BottleFeedBaby)))
+        targets = AccessTools.GetDeclaredMethods(typeof(JobDriver_BottleFeedBaby))
+            .Where(m => m.Name.Contains("FeedBabyFoodFromInventory") && m.Name.Contains("b__"))
+            .Where(m => PatchProcessor.GetOriginalInstructions(m).Any(SpeedyBreastfeedingMod.IsFeedTicksConstant))
+            .Cast<MethodBase>()
+            .ToList();
+
+        if (targets.Count == 0)
         {
-            if (method.Name.Contains("FeedBabyFoodFromInventory") &&
-                method.Name.Contains("b__"))
-            {
-                Log.Message("[SpeedyBreastfeeding] Checking baby food method: " + method.Name);
-                yield return method;
-            }
+            Log.Warning("[SpeedyBreastfeeding] Could not find the baby food feeding rate in JobDriver_BottleFeedBaby; baby food speed setting will have no effect.");
+            return false;
         }
+
+        foreach (MethodBase method in targets)
+        {
+            SpeedyBreastfeedingMod.DebugLog("Patching baby food method: " + method.Name);
+        }
+        return true;
     }
 
-    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase __originalMethod)
-    {
-        bool found = false;
+    static IEnumerable<MethodBase> TargetMethods() => targets;
 
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
         foreach (CodeInstruction instruction in instructions)
         {
-            if (instruction.opcode == OpCodes.Ldc_R4 &&
-                instruction.operand is float value &&
-                value == 5000f)
+            if (SpeedyBreastfeedingMod.IsFeedTicksConstant(instruction))
             {
-                found = true;
-                Log.Message("[SpeedyBreastfeeding] Replacing 5000f in " + __originalMethod.Name);
-                instruction.operand = 5000f / SpeedyBreastfeedingMod.Settings.BabyfoodMultiplier;
+                // Swap the constant for a call so slider changes apply without a restart.
+                instruction.opcode = OpCodes.Call;
+                instruction.operand = AccessTools.Method(typeof(SpeedyBreastfeedingMod), nameof(SpeedyBreastfeedingMod.BabyfoodTicks));
             }
 
             yield return instruction;
-        }
-
-        if (!found)
-        {
-            Log.Message("[SpeedyBreastfeeding] No 5000f found in " + __originalMethod.Name);
         }
     }
 }
