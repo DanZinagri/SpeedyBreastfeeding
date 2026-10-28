@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using System.Reflection;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,9 @@ public class SpeedyBreastfeedingMod : Mod
     {
         Settings = GetSettings<SpeedyBreastfeedingSettings>();
         Harmony harmony = new Harmony("DanZinagri.SpeedyBreastfeeding");
-        harmony.PatchAll();
+        // The assembly is passed explicitly: on .NET 10 (1.7) the parameterless PatchAll() reads the calling
+        // assembly off the stack, which breaks when the JIT inlines the call (Harmony issue #395).
+        harmony.PatchAll(Assembly.GetExecutingAssembly());
     }
 
     // Vanilla's ticks-per-full-meal constant, shared by breastfeeding and bottle feeding.
